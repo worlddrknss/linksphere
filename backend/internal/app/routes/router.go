@@ -18,7 +18,6 @@ func SetupRoutes() *chi.Mux {
 
 	// Routes
 	r.Get("/", handlers.Home)
-	r.Get("/about", handlers.About)
 
 	// API routes
 r.Route("/api", func(r chi.Router) {
