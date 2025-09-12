@@ -10,9 +10,6 @@ RUN apk add --no-cache git
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy .env file
-COPY .env ./
-
 # Copy the rest of the source code
 COPY . .
 
