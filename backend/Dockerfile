@@ -1,6 +1,6 @@
 
 # ---- Build Stage ----
-FROM golang:1.21-alpine AS builder
+FROM golang:1.25-alpine AS builder
 WORKDIR /app
 
 # Install git for go mod download if needed
