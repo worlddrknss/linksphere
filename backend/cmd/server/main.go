@@ -22,6 +22,11 @@ func main() {
 	}
 	defer db.Pool.Close()
 
+	// Auto-migrate tables
+	if err := db.AutoMigrate(); err != nil {
+		log.Fatalf("Migration failed: %v", err)
+	}
+
 	// Setup routes
 	r := routes.SetupRoutes()
 

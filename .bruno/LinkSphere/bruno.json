@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "LinkSphere",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

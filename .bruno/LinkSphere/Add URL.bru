@@ -1,0 +1,21 @@
+meta {
+  name: Add URL
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/api/v1/urls/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "url": "https://example.com/some-long-url"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

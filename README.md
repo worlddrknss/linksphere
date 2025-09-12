@@ -58,14 +58,28 @@ cd LinkSphere
 ### Option A — Docker Compose (recommended)
 
 ```bash
-docker compose up --build
+docker-compose up --build
 ```
 
 This launches:
 
-* **db**: PostgreSQL on `localhost:5432`
-* **backend**: Go API on `http://localhost:8080`
-* **frontend**: React dev server on `http://localhost:5173` (if configured)
+* **PostgreSQL**: Database on `localhost:5432`
+* **pgAdmin**: Database admin interface on `http://localhost:5050`
+* **Backend**: Go API on `http://localhost:8080`
+
+#### pgAdmin Access
+
+* **URL**: <http://localhost:5050>
+* **Email**: `admin@linksphere.com`
+* **Password**: admin123
+
+#### Database Connection (for pgAdmin)
+
+* **Host**: postgres
+* **Port**: 5432
+* **Database**: linksphere
+* **Username**: linksphere_user
+* **Password**: linksphere_password
 
 ### Option B — Run services manually
 
@@ -73,9 +87,9 @@ This launches:
 
 ```bash
 cd backend
-cp .env.example .env
+cp .env.example .env  # Edit .env with your database settings
 go mod tidy
-go run ./cmd/linksphere
+go run ./cmd/server
 ```
 
 #### Frontend
@@ -96,13 +110,12 @@ Create `.env` files from the examples in each package.
 ### Backend (.env)
 
 ```env
-APP_NAME=linksphere
-APP_ENV=local
 PORT=8080
 DB_HOST=localhost
-DB_USER=myuser
-DB_PASS=mypassword
-DB_NAME=mydatabase
+DB_PORT=5432
+DB_NAME=linksphere
+DB_USER=linksphere_user
+DB_PASS=linksphere_password
 ```
 
 ### Frontend (.env)
