@@ -3,6 +3,8 @@
 [![CI - Backend](https://github.com/WorldDrknss/LinkSphere/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/WorldDrknss/LinkSphere/actions/workflows/backend-ci.yml)
 [![CI - Frontend](https://github.com/WorldDrknss/LinkSphere/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/WorldDrknss/LinkSphere/actions/workflows/frontend-ci.yml)
 
+![LinkSphere Interface](./assets/image-2025-09-12-165012.jpg)
+
 LinkSphere is a modern **URL shortener platform** built with **Go (backend)** and **React (frontend)**. It delivers fast link generation, robust click tracking, and an intuitive dashboard for managing and analyzing shortened URLs. Designed for scalability, security, and clear operations, LinkSphere fits both startup and enterprise environments.
 
 ---
