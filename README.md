@@ -1,6 +1,7 @@
 # LinkSphere
 
 [![CI - Backend](https://github.com/WorldDrknss/LinkSphere/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/WorldDrknss/LinkSphere/actions/workflows/backend-ci.yml)
+[![CI - Frontend](https://github.com/WorldDrknss/LinkSphere/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/WorldDrknss/LinkSphere/actions/workflows/frontend-ci.yml)
 
 LinkSphere is a modern **URL shortener platform** built with **Go (backend)** and **React (frontend)**. It delivers fast link generation, robust click tracking, and an intuitive dashboard for managing and analyzing shortened URLs. Designed for scalability, security, and clear operations, LinkSphere fits both startup and enterprise environments.
 
@@ -17,8 +18,10 @@ LinkSphere is a modern **URL shortener platform** built with **Go (backend)** an
 
 ## 🧱 Architecture Overview
 
-* **Backend**: Go.
-* **Frontend**: React.
+* **Backend**: Go with Chi router, PostgreSQL storage
+* **Frontend**: React with TypeScript and Vite
+* **Infrastructure**: Docker containers with multi-stage builds
+* **CI/CD**: GitHub Actions with Docker image publishing
 
 ---
 
@@ -66,6 +69,7 @@ This launches:
 * **PostgreSQL**: Database on `localhost:5432`
 * **pgAdmin**: Database admin interface on `http://localhost:5050`
 * **Backend**: Go API on `http://localhost:8080`
+* **Frontend**: React app on `http://localhost:3000`
 
 #### pgAdmin Access
 
@@ -98,7 +102,7 @@ go run ./cmd/server
 cd frontend
 cp .env.example .env
 npm install
-npm start
+npm run dev
 ```
 
 ---
@@ -121,7 +125,7 @@ DB_PASS=linksphere_password
 ### Frontend (.env)
 
 ```env
-REACT_APP_API_URL=http://localhost:8080/api/v1
+VITE_API_URL=http://localhost:8080/api/v1
 ```
 
 ---
@@ -144,7 +148,7 @@ npm test
 
 (Optional) **E2E**: add Playwright/Cypress under `frontend/e2e`.
 
-CI is defined in **.github/workflows** (e.g., `backend-ci.yml`).
+CI/CD is defined in **.github/workflows** with separate pipelines for backend (`backend-ci.yml`) and frontend (`frontend-ci.yml`), both using Docker builds and publishing to GitHub Container Registry.
 
 ---
 
