@@ -1,0 +1,24 @@
+name: CI - Frontend
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'frontend/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'frontend/**'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-test:
+    uses: ./.github/workflows/docker-build.yml
+    with:
+      service: frontend
+      path: ./frontend
+      image: ghcr.io/${{ github.repository_owner }}/linksphere-frontend
+    secrets: inherit
