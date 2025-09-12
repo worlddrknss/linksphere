@@ -22,6 +22,10 @@ func DeleteUrl(w http.ResponseWriter, r *http.Request) {
     w.Write([]byte("Delete URL"))
 }
 
+func About(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "LinkSphere is a simple URL shortening service.")
+}
+
 // Health function handles health check requests
 func Health(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
