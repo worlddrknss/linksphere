@@ -11,19 +11,11 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUrl(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("Fetch URL metadata"))
+	w.Write([]byte("Fetch URL metadata"))
 }
 
 func UpdateUrl(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("Update URL"))
-}
-
-func DeleteUrl(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("Delete URL"))
-}
-
-func About(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "LinkSphere is a simple URL shortening service.")
+	w.Write([]byte("Update URL"))
 }
 
 // Health function handles health check requests
