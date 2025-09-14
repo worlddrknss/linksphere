@@ -2,6 +2,7 @@
 
 [![CI - Backend](https://github.com/WorldDrknss/LinkSphere/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/WorldDrknss/LinkSphere/actions/workflows/backend-ci.yml)
 [![CI - Frontend](https://github.com/WorldDrknss/LinkSphere/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/WorldDrknss/LinkSphere/actions/workflows/frontend-ci.yml)
+[![pipeline status](https://gitlab.com/worlddrknss/LinkSphere/badges/main/pipeline.svg)](https://gitlab.com/worlddrknss/LinkSphere/-/commits/main)
 
 ![LinkSphere Interface](./assets/image-2025-09-12-165012.jpg)
 
