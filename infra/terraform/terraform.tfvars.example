@@ -1,0 +1,11 @@
+aws_region = "us-east-1"
+project_name = "linksphere"
+vpc_cidr = "10.0.0.0/16"
+public_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
+
+# Provide the full image URIs (as pushed by GitLab CI)
+backend_image = "registry.gitlab.com/myorg/linksphere/linksphere-backend:MAIN_SHA"
+frontend_image = "registry.gitlab.com/myorg/linksphere/linksphere-frontend:MAIN_SHA"
+
+desired_count_backend = 2
+desired_count_frontend = 2
