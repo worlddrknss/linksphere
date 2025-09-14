@@ -18,22 +18,27 @@ func SetupRoutes() *chi.Mux {
 
 	// Routes
 	r.Get("/", handlers.Home)
-	
-	// API routes
-r.Route("/api", func(r chi.Router) {
-    r.Route("/v1", func(r chi.Router) {
-        // Healthcheck
-        r.Get("/health", handlers.Health)
 
-        // URLs
-        r.Route("/urls", func(r chi.Router) {
-            r.Post("/", handlers.CreateUrl)
-            r.Get("/{alias}", handlers.GetUrl)
-            r.Put("/{alias}", handlers.UpdateUrl)
-            r.Delete("/{alias}", handlers.DeleteUrl)
-        })
-    })
-})
+	// API routes
+	r.Route("/api", func(r chi.Router) {
+		r.Route("/v1", func(r chi.Router) {
+			// Healthcheck
+			r.Get("/health", handlers.Health)
+
+			// URLs
+			r.Route("/urls", func(r chi.Router) {
+				r.Post("/", handlers.CreateUrl)
+				r.Get("/{alias}", handlers.GetUrl)
+				r.Put("/{alias}", handlers.UpdateUrl)
+				r.Delete("/{alias}", handlers.DeleteUrl)
+			})
+
+			// Admin routes
+			r.Route("/admin", func(r chi.Router) {
+				r.Get("/urls", handlers.ListUrls)
+			})
+		})
+	})
 
 	return r
 }
