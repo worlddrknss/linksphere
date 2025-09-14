@@ -1,4 +1,10 @@
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
 stages:
+  - sast
+  - secret_detection
   - build
 
 # Shared job template (replaces docker-build.yml in GitHub)
