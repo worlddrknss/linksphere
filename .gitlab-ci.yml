@@ -23,18 +23,24 @@ stages:
     - echo "🔑 Logging into GitLab Container Registry"
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
 
-    # Normalize image names to lowercase
-    - IMAGE=$(echo "${CI_REGISTRY_IMAGE}/${SERVICE}:${CI_COMMIT_SHA}" | tr '[:upper:]' '[:lower:]')
-    - LATEST=$(echo "${CI_REGISTRY_IMAGE}/${SERVICE}:latest" | tr '[:upper:]' '[:lower:]')
+    # Normalize tags to lowercase
+    - IMAGE_SHA=$(echo "${CI_REGISTRY_IMAGE}/${SERVICE}:${CI_COMMIT_SHA}" | tr '[:upper:]' '[:lower:]')
+    - IMAGE_LATEST=$(echo "${CI_REGISTRY_IMAGE}/${SERVICE}:latest" | tr '[:upper:]' '[:lower:]')
+    - IMAGE_BRANCH=$(echo "${CI_REGISTRY_IMAGE}/${SERVICE}:${CI_COMMIT_BRANCH}" | tr '[:upper:]' '[:lower:]')
 
-    - echo "🐳 Building $IMAGE"
-    - docker pull "$LATEST" || true
-    - docker build --pull --cache-from "$LATEST" -t "$IMAGE" "$BUILD_PATH"
-    - docker tag "$IMAGE" "$LATEST"
+    - echo "🐳 Building $IMAGE_SHA"
+    - docker pull "$IMAGE_LATEST" || true
+    - docker build --pull --cache-from "$IMAGE_LATEST" -t "$IMAGE_SHA" "$BUILD_PATH"
+
+    # Tag additional variants
+    - docker tag "$IMAGE_SHA" "$IMAGE_LATEST"
+    - docker tag "$IMAGE_SHA" "$IMAGE_BRANCH"
 
     - echo "📤 Pushing images"
-    - docker push "$IMAGE"
-    - docker push "$LATEST"
+    - docker push "$IMAGE_SHA"
+    - docker push "$IMAGE_LATEST"
+    - docker push "$IMAGE_BRANCH"
+
 
 # Backend build job
 backend-build:
