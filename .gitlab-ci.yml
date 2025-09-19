@@ -1,11 +1,7 @@
 workflow:
   rules:
-    - if: $CI_COMMIT_TAG       # run on tags
-    - if: $CI_COMMIT_BRANCH    # run on branches
-
-include:
-  - template: Security/SAST.gitlab-ci.yml
-  - template: Security/Secret-Detection.gitlab-ci.yml
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH
 
 stages:
   - test
@@ -14,110 +10,8 @@ stages:
   - build
   - release
 
-# Shared job template for Docker builds
-.docker-build-template:
-  stage: build
-  image: docker:24.0.5
-  services:
-    - name: docker:24.0.5-dind
-      command: ["--tls=false"]
-  variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: tcp://docker:2375
-  script:
-    - echo "🔑 Logging into GitLab Container Registry"
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-
-    # Normalize tags to lowercase
-    - IMAGE_SHA=$(echo "${CI_REGISTRY_IMAGE}/${SERVICE}:${CI_COMMIT_SHA}" | tr '[:upper:]' '[:lower:]')
-    - IMAGE_LATEST=$(echo "${CI_REGISTRY_IMAGE}/${SERVICE}:latest" | tr '[:upper:]' '[:lower:]')
-    - IMAGE_BUILD=$(echo "${CI_REGISTRY_IMAGE}/${SERVICE}:build-${CI_PIPELINE_IID}" | tr '[:upper:]' '[:lower:]')
-
-    - echo "🐳 Building $IMAGE_SHA"
-    - docker pull "$IMAGE_LATEST" || true
-    - docker build --pull --cache-from "$IMAGE_LATEST" -t "$IMAGE_SHA" "$BUILD_PATH"
-
-    # Tag additional variants
-    - docker tag "$IMAGE_SHA" "$IMAGE_LATEST"
-    - docker tag "$IMAGE_SHA" "$IMAGE_BUILD"
-
-    - echo "📤 Pushing images"
-    - docker push "$IMAGE_SHA"
-    - docker push "$IMAGE_LATEST"
-    - docker push "$IMAGE_BUILD"
-
-# Backend build job (only for branches)
-backend-build:
-  extends: .docker-build-template
-  variables:
-    SERVICE: "linksphere-backend"
-    BUILD_PATH: "./backend"
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
-      changes:
-        - backend/**/*
-
-# Frontend build job (only for branches)
-frontend-build:
-  extends: .docker-build-template
-  variables:
-    SERVICE: "linksphere-frontend"
-    BUILD_PATH: "./frontend"
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
-      changes:
-        - frontend/**/*
-
-# ---------------------------
-# Tagged release build
-# ---------------------------
-.release-build-template:
-  stage: release
-  image: docker:24.0.5
-  services:
-    - name: docker:24.0.5-dind
-      command: ["--tls=false"]
-  variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: tcp://docker:2375
-  script:
-    - echo "🔑 Logging into GitLab Container Registry"
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-
-    - IMAGE_TAG=$(echo "${CI_REGISTRY_IMAGE}/${SERVICE}:${CI_COMMIT_TAG}" | tr '[:upper:]' '[:lower:]')
-
-    - echo "🐳 Building release image $IMAGE_TAG"
-    - docker build -t "$IMAGE_TAG" "$BUILD_PATH"
-    - docker push "$IMAGE_TAG"
-
-# Backend release job (only for tags)
-backend-release:
-  extends: .release-build-template
-  variables:
-    SERVICE: "linksphere-backend"
-    BUILD_PATH: "./backend"
-  rules:
-    - if: '$CI_COMMIT_TAG'
-
-# Frontend release job (only for tags)
-frontend-release:
-  extends: .release-build-template
-  variables:
-    SERVICE: "linksphere-frontend"
-    BUILD_PATH: "./frontend"
-  rules:
-    - if: '$CI_COMMIT_TAG'
-
-# GitLab Release entry (only for tags)
-create-release:
-  stage: release
-  image: registry.gitlab.com/gitlab-org/release-cli:latest
-  needs: [backend-release, frontend-release]
-  rules:
-    - if: '$CI_COMMIT_TAG'
-  script:
-    - release-cli create --name "Release $CI_COMMIT_TAG" \
-        --tag-name "$CI_COMMIT_TAG" \
-        --description "Automated release for $CI_COMMIT_TAG"
+include:
+  - local: '.gitlab/ci/build.yml'
+  - local: '.gitlab/ci/release.yml'
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
