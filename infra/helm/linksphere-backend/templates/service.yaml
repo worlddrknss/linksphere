@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "linksphere-backend.fullname" . }}
+  name: {{ .Release.Name }}
   labels:
-    app: {{ include "linksphere-backend.name" . }}
+    app: {{ .Release.Name }}
 spec:
   type: {{ .Values.service.type }}
   selector:
-    app: {{ include "linksphere-backend.name" . }}
+    app: {{ .Release.Name }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.port }}
