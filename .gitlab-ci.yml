@@ -1,3 +1,8 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG       # run on tags
+    - if: $CI_COMMIT_BRANCH    # run on branches
+
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
@@ -7,7 +12,7 @@ stages:
   - sast
   - secret_detection
   - build
-  - release   # 👈 new stage for tagged releases
+  - release
 
 # Shared job template for Docker builds
 .docker-build-template:
@@ -42,7 +47,7 @@ stages:
     - docker push "$IMAGE_LATEST"
     - docker push "$IMAGE_BUILD"
 
-# Backend build job
+# Backend build job (only for branches)
 backend-build:
   extends: .docker-build-template
   variables:
@@ -53,7 +58,7 @@ backend-build:
       changes:
         - backend/**/*
 
-# Frontend build job
+# Frontend build job (only for branches)
 frontend-build:
   extends: .docker-build-template
   variables:
@@ -87,7 +92,7 @@ frontend-build:
     - docker build -t "$IMAGE_TAG" "$BUILD_PATH"
     - docker push "$IMAGE_TAG"
 
-# Backend release job
+# Backend release job (only for tags)
 backend-release:
   extends: .release-build-template
   variables:
@@ -96,7 +101,7 @@ backend-release:
   rules:
     - if: '$CI_COMMIT_TAG'
 
-# Frontend release job
+# Frontend release job (only for tags)
 frontend-release:
   extends: .release-build-template
   variables:
@@ -105,7 +110,7 @@ frontend-release:
   rules:
     - if: '$CI_COMMIT_TAG'
 
-# GitLab Release entry
+# GitLab Release entry (only for tags)
 create-release:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
