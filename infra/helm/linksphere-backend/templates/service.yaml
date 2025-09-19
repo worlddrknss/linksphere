@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "chart.fullname" . }}
+  name: {{ include "linksphere-backend.fullname" . }}
   labels:
-    app: {{ include "chart.name" . }}
+    app: {{ include "linksphere-backend.name" . }}
 spec:
   type: {{ .Values.service.type }}
   selector:
-    app: {{ include "chart.name" . }}
+    app: {{ include "linksphere-backend.name" . }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.port }}

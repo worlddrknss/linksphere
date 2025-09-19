@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "chart.fullname" . }}
+  name: {{ include "linksphere-frontend.fullname" . }}
   labels:
-    app: {{ include "chart.name" . }}
+    app: {{ include "linksphere-frontend.name" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "chart.name" . }}
+      app: {{ include "linksphere-frontend.name" . }}
   template:
     metadata:
       labels:
-        app: {{ include "chart.name" . }}
+        app: {{ include "linksphere-frontend.name" . }}
     spec:
       containers:
-        - name: {{ include "chart.name" . }}
+        - name: {{ include "linksphere-frontend.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
