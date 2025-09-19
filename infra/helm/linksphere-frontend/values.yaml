@@ -1,0 +1,10 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/worlddrknss/linksphere-frontend
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
