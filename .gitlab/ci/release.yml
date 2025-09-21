@@ -1,6 +1,5 @@
-# Shared release template
-.release-build-template:
-  stage: release
+# Shared job template: Docker login
+.docker-login:
   image: docker:24.0.5
   services:
     - name: docker:24.0.5-dind
@@ -9,10 +8,15 @@
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ""
     DOCKER_HOST: tcp://docker:2375
-  script:
+  before_script:
     - echo "🔑 Logging into GitLab Container Registry"
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
 
+# Shared release template
+.release-build-template:
+  extends: .docker-login
+  stage: release
+  script:
     - IMAGE_TAG=$(echo "${CI_REGISTRY_IMAGE}/${SERVICE}:${CI_COMMIT_TAG}" | tr '[:upper:]' '[:lower:]')
 
     - echo "🐳 Building release image $IMAGE_TAG"
